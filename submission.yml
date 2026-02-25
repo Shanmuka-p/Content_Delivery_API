@@ -1,0 +1,8 @@
+# submission.yml
+setup:
+  - command: "npm install"
+  - command: "docker-compose up -d db minio createbuckets"
+test:
+  - command: "npm run test"
+benchmark:
+  - command: "npm run benchmark"

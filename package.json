@@ -1,0 +1,38 @@
+{
+  "name": "content_delivery_api",
+  "version": "1.0.0",
+  "description": "Description\r Objective\r Design and build a robust, high-performance content delivery API that leverages modern HTTP caching standards and integrates seamlessly with a Content Delivery Network (CDN). The primary goal is to minimize latency for global users and reduce load on the origin server by maximizing cache hit rates at the edge. You will implement sophisticated caching strategies, including ETags for conditional requests, granular Cache-Control headers, and immutable content versioning.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shanmuka-p/Content_Delivery_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Shanmuka-p/Content_Delivery_API/issues"
+  },
+  "homepage": "https://github.com/Shanmuka-p/Content_Delivery_API#readme",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.997.0",
+    "@fastify/env": "^5.0.3",
+    "@fastify/multipart": "^9.4.0",
+    "dotenv": "^17.3.1",
+    "fastify": "^5.7.4",
+    "pg": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
