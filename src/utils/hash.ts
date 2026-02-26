@@ -9,3 +9,10 @@ export function generateStrongETag(buffer: Buffer): string {
   const hash = crypto.createHash("sha256").update(buffer).digest("hex");
   return `"${hash}"`;
 }
+
+/**
+ * Generates a cryptographically secure random token.
+ */
+export function generateSecureToken(): string {
+  return crypto.randomBytes(32).toString("hex");
+}
