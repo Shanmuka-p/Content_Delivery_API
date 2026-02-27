@@ -1,0 +1,170 @@
+{
+    "info": {
+        "name": "Content Delivery API",
+        "description": "Full request flow for the Content Delivery CDN Origin API, including Edge Caching (304 Not Modified) and Immutable Versioning.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:3000",
+            "type": "string"
+        },
+        {
+            "key": "asset_id",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "asset_etag",
+            "value": "",
+            "type": "string"
+        },
+        {
+            "key": "version_id",
+            "value": "",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "1. Upload Asset",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "var jsonData = pm.response.json();",
+                            "if(jsonData.id) {",
+                            "    pm.collectionVariables.set(\"asset_id\", jsonData.id);",
+                            "    pm.collectionVariables.set(\"asset_etag\", jsonData.etag);",
+                            "    console.log(\"Saved ID and ETag for next requests!\");",
+                            "}"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                    "mode": "formdata",
+                    "formdata": [
+                        {
+                            "key": "file",
+                            "type": "file"
+                        },
+                        {
+                            "key": "is_private",
+                            "value": "false",
+                            "type": "text"
+                        }
+                    ]
+                },
+                "url": {
+                    "raw": "{{base_url}}/assets/upload",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "assets",
+                        "upload"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "2. Download Asset (Cache Miss)",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/assets/{{asset_id}}/download",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "assets",
+                        "{{asset_id}}",
+                        "download"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "3. Conditional Download (304 Cache Hit)",
+            "request": {
+                "method": "GET",
+                "header": [
+                    {
+                        "key": "If-None-Match",
+                        "value": "{{asset_etag}}",
+                        "type": "text"
+                    }
+                ],
+                "url": {
+                    "raw": "{{base_url}}/assets/{{asset_id}}/download",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "assets",
+                        "{{asset_id}}",
+                        "download"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "4. Publish Immutable Version",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "var jsonData = pm.response.json();",
+                            "if(jsonData.newVersionId) {",
+                            "    pm.collectionVariables.set(\"version_id\", jsonData.newVersionId);",
+                            "}"
+                        ],
+                        "type": "text/javascript"
+                    }
+                }
+            ],
+            "request": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/assets/{{asset_id}}/publish",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "assets",
+                        "{{asset_id}}",
+                        "publish"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "5. Download Immutable Version",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{base_url}}/assets/public/{{version_id}}",
+                    "host": [
+                        "{{base_url}}"
+                    ],
+                    "path": [
+                        "assets",
+                        "public",
+                        "{{version_id}}"
+                    ]
+                }
+            }
+        }
+    ]
+}
